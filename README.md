@@ -82,6 +82,10 @@ SOLVER_API_KEY: str = "ISI_API_KEY_ANDA_DI_SINI"
 2. Jalankan skrip:
 
 ```bash
+python3 claim_faucet.py
+```
+OR
+```bash
 python claim_faucet.py
 ```
 
