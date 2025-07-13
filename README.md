@@ -66,6 +66,9 @@ pip install -r requirements.txt
 
 4. **Isi API Key di skrip**
 > Buka `claim_faucet.py` dan ubah baris berikut:
+```bash
+nano claim_faucet.py
+```
 
 ```python
 SOLVER_API_KEY: str = "ISI_API_KEY_ANDA_DI_SINI"
