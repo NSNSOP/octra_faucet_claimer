@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import functools
 import os
@@ -15,11 +14,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-# ==============================================================================
-# --- PUSAT KONFIGURASI ---
-# ==============================================================================
 class Config:
-    """Menyimpan semua variabel konfigurasi."""
     SOLVER_API_KEY: str = "ISI_API_KEY_ANDA_DI_SINI"
     WALLETS_DIR: str = "wallets"
     SOLVER_IN_URL: str = "https://api.solvecaptcha.com/in.php"
@@ -34,7 +29,6 @@ class Config:
 console = Console()
 
 def clean_project_cache():
-    """Mencari dan menghapus folder __pycache__ serta memberikan konfirmasi."""
     try:
         script_dir = os.path.dirname(os.path.abspath(__file__))
         cache_dir = os.path.join(script_dir, '__pycache__')
@@ -47,7 +41,6 @@ def clean_project_cache():
         console.print(f"   [yellow]Peringatan: Gagal memproses cache proyek. Error: {e}[/yellow]")
 
 def retry_handler(max_retries: int, delay: int):
-    """Decorator cerdas untuk menangani coba lagi pada sebuah fungsi."""
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -68,7 +61,6 @@ def retry_handler(max_retries: int, delay: int):
     return decorator
 
 def parse_selection_range(selection_str: str, max_val: int) -> List[int]:
-    """Mengubah string input menjadi daftar indeks unik (berbasis 0)."""
     indices = set()
     parts = selection_str.split(',')
     for part in parts:
@@ -87,7 +79,6 @@ def parse_selection_range(selection_str: str, max_val: int) -> List[int]:
     return sorted(list(indices))
 
 def get_wallet_address_from_file(filepath: str) -> Optional[str]:
-    """Membaca file wallet dan mengambil alamatnya."""
     try:
         with open(filepath, 'r', encoding='utf-8') as f:
             for line in f:
@@ -98,7 +89,6 @@ def get_wallet_address_from_file(filepath: str) -> Optional[str]:
     return None
 
 def get_captcha_token() -> Optional[str]:
-    """Menghubungi API solver untuk mendapatkan token reCAPTCHA."""
     console.print("   [cyan]1. Meminta token CAPTCHA baru...[/cyan]")
     payload = {'key': Config.SOLVER_API_KEY, 'method': 'userrecaptcha', 'googlekey': Config.FAUCET_SITEKEY, 'pageurl': Config.FAUCET_PAGE_URL, 'json': 1}
     response = requests.post(Config.SOLVER_IN_URL, data=payload, timeout=30); response.raise_for_status()
@@ -120,7 +110,6 @@ def get_captcha_token() -> Optional[str]:
     console.print(f"\n   [red]Solver Gagal (timeout 3 menit).[/red]"); return None
 
 def claim_faucet(wallet_address: str, captcha_token: str) -> bool:
-    """Mengirim permintaan klaim ke server faucet."""
     console.print(f"   [cyan]2. Melakukan klaim untuk:[/cyan] [yellow]{wallet_address[:15]}...{wallet_address[-4:]}[/yellow]")
     form_data = {'address': (None, wallet_address), 'is_validator': (None, 'false'), 'g-recaptcha-response': (None, captcha_token)}
     headers = {'User-Agent': 'Mozilla/5.0'}
@@ -140,13 +129,11 @@ def claim_faucet(wallet_address: str, captcha_token: str) -> bool:
 
 @retry_handler(max_retries=Config.MAX_RETRIES, delay=Config.RETRY_DELAY_SECONDS)
 def process_single_wallet(address: str) -> bool:
-    """Menggabungkan proses get_token dan claim. Fungsi inilah yang akan di-retry."""
     token = get_captcha_token()
     if not token: return False
     return claim_faucet(address, token)
 
 def display_results_summary(successful_wallets: List[Tuple[int, str]], failed_wallets: List[Tuple[int, str]]):
-    """Menampilkan panel ringkasan hasil akhir proses klaim."""
     total_processed = len(successful_wallets) + len(failed_wallets)
     summary_text = Text(justify="center")
     summary_text.append(f"Total Diproses: {total_processed}\n")
@@ -164,12 +151,6 @@ def display_results_summary(successful_wallets: List[Tuple[int, str]], failed_wa
     console.print(Panel(summary_text, title="[bold yellow]📊 Laporan Hasil Akhir[/bold yellow]", border_style="blue"))
 
 def run_claim_process(wallets_to_process: List[Tuple[int, str]]) -> Tuple[List[Tuple[int, str]], List[Tuple[int, str]]]:
-    """
-    Menjalankan proses klaim untuk daftar wallet yang diberikan.
-
-    :param wallets_to_process: Daftar tuple (nomor_asli, nama_file) untuk diproses.
-    :return: Tuple berisi (daftar_sukses, daftar_gagal).
-    """
     successful_run = []
     failed_run = []
     
@@ -196,7 +177,6 @@ def run_claim_process(wallets_to_process: List[Tuple[int, str]]) -> Tuple[List[T
     return successful_run, failed_run
 
 def main():
-    """Fungsi utama yang mengorkestrasi seluruh alur kerja skrip."""
     console.print(Panel.fit("[bold cyan]OCTRA Multi-Claim Faucet Script[/bold cyan]\n(v7.0 - Dengan Fitur Ulangi Gagal)", title="[yellow]Welcome[/yellow]"))
     console.print("\n[bold]Memulai dengan memeriksa cache awal...[/bold]")
     clean_project_cache()
@@ -225,21 +205,17 @@ def main():
     if not selected_indices:
         console.print("[red]Pilihan tidak valid. Keluar.[/red]"); return
     
-    # Membuat daftar awal wallet yang akan diproses
     wallets_to_process = [(idx + 1, wallet_files[idx]) for idx in selected_indices]
     
     all_successful_wallets = []
     
-    # Loop utama: akan terus berjalan selama ada wallet yang gagal dan user ingin mengulang
     while wallets_to_process:
         console.print(Panel(f"[bold green]Akan memulai proses untuk {len(wallets_to_process)} wallet...[/bold green]"))
         
         successful_this_run, failed_this_run = run_claim_process(wallets_to_process)
         
-        # Akumulasi hasil yang sukses
         all_successful_wallets.extend(successful_this_run)
         
-        # Persiapan untuk iterasi berikutnya
         wallets_to_process = failed_this_run
         
         if wallets_to_process:
@@ -248,14 +224,13 @@ def main():
             try:
                 wants_to_retry = questionary.confirm("Apakah Anda ingin mencoba menjalankan ulang wallet yang gagal?").ask()
                 if not wants_to_retry:
-                    break # Keluar dari loop jika user tidak ingin mengulang
+                    break
             except KeyboardInterrupt:
                 console.print("\n[yellow]Proses pengulangan dibatalkan.[/yellow]")
                 break
         else:
             console.print("\n[bold green]🎉 Selamat! Semua wallet berhasil diproses![/bold green]")
 
-    # Laporan akhir setelah loop selesai
     console.print("\n" + "="*60 + "\n")
     display_results_summary(all_successful_wallets, wallets_to_process)
 
