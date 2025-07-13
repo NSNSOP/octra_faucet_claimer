@@ -28,7 +28,7 @@ octra_faucet_claimer/
 
 **Contoh isi wallet file:**
 ```
-Address: 0x1234567890abcdef1234567890abcdef12345678
+Address: oct3Pg9xWiend7bHFJiFxk1NWwX9PHY5qTTzBCU9etc92Tu
 ```
 
 ---
