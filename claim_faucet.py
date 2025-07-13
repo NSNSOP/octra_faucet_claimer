@@ -26,16 +26,16 @@ from rich.text import Text
 # ==============================================================================
 class Config:
     """Menyimpan semua variabel konfigurasi."""
-    SOLVER_API_KEY: str = "8e38bd5fc1aaacbaa23a19eb8998dadb"
+    SOLVER_API_KEY: str = "ISI_API_KEY_ANDA_DI_SINI"
     WALLETS_DIR: str = "wallets"
     SOLVER_IN_URL: str = "https://api.solvecaptcha.com/in.php"
     SOLVER_RES_URL: str = "https://api.solvecaptcha.com/res.php"
     FAUCET_CLAIM_URL: str = "https://faucet.octra.network/claim"
     FAUCET_PAGE_URL: str = "https://faucet.octra.network/"
     FAUCET_SITEKEY: str = "6LekoXkrAAAAAMlLCpc2KJqSeUHye6KMxOL5_SES"
-    MAX_RETRIES: int = 1
+    MAX_RETRIES: int = 3
     RETRY_DELAY_SECONDS: int = 5
-    WALLET_DELAY_SECONDS: int = 61
+    WALLET_DELAY_SECONDS: int = 10
 
 console = Console()
 
