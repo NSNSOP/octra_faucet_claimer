@@ -1,3 +1,5 @@
+<img width="495" height="597" alt="image" src="https://github.com/user-attachments/assets/120ddcb2-34c7-46d4-9b4f-0ce7259bfef0" />
+
 # 🪙 Octra Faucet Auto-Claimer
 
 Skrip Python untuk mengklaim faucet dari **Octra Network** secara massal menggunakan banyak wallet secara otomatis. Mendukung input interaktif, retry otomatis, laporan hasil yang rapi, dan bisa mengulang hanya wallet yang gagal.
