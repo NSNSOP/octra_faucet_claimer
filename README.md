@@ -61,7 +61,7 @@ source venv/bin/activate
 3. **Install dependensi**
 
 ```bash
-pip install -r requirements.txt
+pip install requests
 ```
 
 4. **Isi API Key di skrip**
