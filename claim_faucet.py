@@ -1,12 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-Script automasi untuk melakukan klaim faucet dari Octra Network secara massal.
-Fitur termasuk pemilihan wallet interaktif, penanganan coba lagi (retry) yang cerdas,
-pembersihan cache otomatis, laporan hasil akurat, dan fitur untuk mengulang wallet gagal.
-"""
-
 import functools
 import os
 import shutil
